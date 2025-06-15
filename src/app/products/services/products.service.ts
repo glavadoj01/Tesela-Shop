@@ -54,7 +54,6 @@ export class ProductsService {
     .pipe(
       delay(2000), // Simulate a delay of 2 seconds
       tap( resp => this.productCache.set(idSlug, resp) ),
-      tap( resp => console.log('🟡👉 Petición HTTP:', resp) )
     )
   }
 }
