@@ -1,24 +1,28 @@
 <h1 class="text-3xl font-bold font-montserrat">Todos los productos</h1>
 <h2 class="text-xl mb-5">Para todos los gutstos</h2>
+
 <div
-  class="grid grid-cols1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-5 gap-3"
+class="grid grid-cols1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-5 gap-3"
 >
-  @for(product of productsResource.value() ; track product.id) {
+  @for(product of productsResource.value()?.products ; track product.id) {
     <product-card [product]="product" />
   }@empty {
     <div class="col-span-full text-center">
       <p class="text-gray-500">No hay productos disponibles.</p>
     </div>
   }
-
-  <!-- Producto extra con errores de carga -->
+<!-- Producto extra con errores de carga -->
+<!--
   <product-card [product]="{
-    id: '0', title: 'Random', description: 'Blablabla', images: [],
+    id: '0', title: 'Random', description: 'Blablabla Fallo Sin Imagen', images: [],
     price: 0, slug: 'rand', stock: 0,
     }"
     class="animate-pulse"
-  />
+    />
+-->
 </div>
 
-
-
+<app-pagination
+  [pages]="productsResource.value()?.pages ?? 1"
+  [currentPage]="paginationService.currentPage()"
+/>

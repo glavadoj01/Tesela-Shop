@@ -1,26 +1,27 @@
-import { Component, inject } from '@angular/core';
-
 import { ProductCardComponent } from '@/products/components/product-card/product-card.component';
 import { ProductsService } from '@/products/services/products.service';
+import { PaginationService } from '@/shared/components/pagination/pagination.service';
+
+import { Component, inject } from '@angular/core';
+import { PaginationComponent } from "@shared/components/pagination/pagination.component";
 import { rxResource } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
-import { Product } from '@/products/interfaces/product-response';
+
 
 @Component({
   selector: 'app-home-page',
-  imports: [ProductCardComponent],
+  imports: [ProductCardComponent, PaginationComponent],
   templateUrl: './home-page.component.html',
 })
 export class HomePageComponent {
-
   productService = inject(ProductsService);
+  paginationService = inject(PaginationService)
 
   productsResource = rxResource({
-    request: () => ({  }),
-    loader: ({  }) => {
-      return this.productService.getProducts({}).pipe(
-        map( response => response.products),
-      )
+    request: () => ({ page: this.paginationService.currentPage() }),
+    loader: ({ request }) => {
+      return this.productService.getProducts({
+        offset: (request.page - 1) * 12
+      })
     }
   })
 }
