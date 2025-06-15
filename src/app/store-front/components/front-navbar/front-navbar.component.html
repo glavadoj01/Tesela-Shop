@@ -90,9 +90,25 @@
     </ul>
   </div>
 
-
-
-  <div class="navbar-end">
-    <a class="btn">Button</a>
+  <div class="navbar-end gap-4">
+    @if (authService.authStatus() === 'authenticated') {
+      <button class="btn btn-ghost">
+        {{  authService.user()!.fullName }}
+      </button>
+      <button class="btn btn-sm btn-error" (click)="authService.logOut()">
+        Salir
+      </button>
+    }
+    @else if ( authService.authStatus() === 'no-authenticated' ) {
+      <a class="btn btn-primary" routerLink="/auth/login">
+        Iniciar Sesión
+      </a>
+      <a class="btn btn-sm btn-ghost" routerLink="/auth/register">
+        Registrarse
+      </a>
+    }
+    @else{
+      <span class="loading">...</span>
+    }
   </div>
 </div>
