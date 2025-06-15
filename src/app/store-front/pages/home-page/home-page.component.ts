@@ -19,7 +19,7 @@ export class HomePageComponent {
     request: () => ({  }),
     loader: ({  }) => {
       return this.productService.getProducts({}).pipe(
-        map( response => response.products ?? [] as Product[]),
+        map( response => response.products),
       )
     }
   })
