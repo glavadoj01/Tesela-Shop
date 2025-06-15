@@ -22,7 +22,7 @@ export class ProductsService {
 
   getProducts(opts: OptionsProd): Observable<ProductsResponse> {
     // Destructure options with default values
-    const { limit = 12, offset = 0, gender = '' } = opts;
+    const { limit = 9, offset = 0, gender = '' } = opts;
 
     return this.http
     .get<ProductsResponse>(`${BASE_URL}/products`, {
@@ -32,9 +32,6 @@ export class ProductsService {
         gender
       }
     })
-    .pipe(
-      tap( resp => console.log('Products fetched:', resp) ),
-    )
   }
 
   getProductByIdSlug(idSlug: string): Observable<Product> {

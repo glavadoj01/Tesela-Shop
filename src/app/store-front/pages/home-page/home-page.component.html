@@ -10,6 +10,14 @@
       <p class="text-gray-500">No hay productos disponibles.</p>
     </div>
   }
+
+  <!-- Producto extra con errores de carga -->
+  <product-card [product]="{
+    id: '0', title: 'Random', description: 'Blablabla', images: [],
+    price: 0, slug: 'rand', stock: 0,
+    }"
+    class="animate-pulse"
+  />
 </div>
 
 

@@ -2,7 +2,7 @@ import { Pipe, type PipeTransform } from '@angular/core';
 import { environment } from '@environments/environment';
 
 
-const IMG_DEFAULT = 'public/assets/images/no-image.png';
+const IMG_DEFAULT = 'assets/images/no-image.jpg';
 const BASE_URL = environment.baseUrl;
 
 @Pipe({
@@ -15,6 +15,12 @@ export class ProductImagePipe implements PipeTransform {
       return IMG_DEFAULT;
     }
 
-    return `${BASE_URL}/files/product/${ value[0] }`;
+    if (typeof value === 'string') {
+      return `${BASE_URL}/files/product/${value}`;
+    }
+
+    const imagen = value[0]
+
+    return `${BASE_URL}/files/product/${ imagen }`
   }
 }

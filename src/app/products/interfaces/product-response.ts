@@ -13,11 +13,11 @@ export interface Product {
   description: string;
   slug:        string;
   stock:       number;
-  sizes:       Size[];
-  gender:      Gender;
-  tags:        string[];
+  sizes?:       Size[];
+  gender?:      Gender;
+  tags?:        string[];
   images:      string[];
-  user:        User;
+  user?:        User;
 }
 
 export enum Gender {
