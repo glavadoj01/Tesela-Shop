@@ -29,7 +29,7 @@ export class LoginPageComponent {
       this.hasError.set(true);
       setTimeout(() => {
         this.hasError.set(false);
-      },2000)
+      },5000)
       return;
     }
 
@@ -42,7 +42,7 @@ export class LoginPageComponent {
         }
 
         this.hasError.set(true);
-        setTimeout( () => {this.hasError.set(false)}, 2000);
+        setTimeout( () => {this.hasError.set(false)}, 5000);
       }
     )
   }

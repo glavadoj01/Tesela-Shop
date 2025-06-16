@@ -11,5 +11,8 @@ export class FrontNavbarComponent {
 
   authService = inject(AuthService);
 
-  
+  constructor() {
+    this.authService.checkStatus().subscribe()
+  }
+
 }

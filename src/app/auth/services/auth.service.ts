@@ -16,26 +16,23 @@ const BASE_URL = environment.baseUrl
 })
 export class AuthService {
 
+  private http = inject(HttpClient);
   private _authStatus = signal<AuthStatus>('checking');
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(localStorage.getItem('token'));
-
-  private http = inject(HttpClient);
 
   checkStatusResource = rxResource({
     loader: () => this.checkStatus()
   })
 
   // Getters
-  authStatus = computed<AuthStatus>( () => {
-    if (this._authStatus() === 'checking') return 'checking';
-
-    if( this._user()) return 'authenticated';
-
-    return 'no-authenticated';
-  })
   user = computed<User | null>( () => this._user());
   token = computed<string | null>( () => this._token());
+  authStatus = computed<AuthStatus>( () => {
+    if (this._authStatus() === 'checking') return 'checking';
+    if( this._user()) return 'authenticated';
+    return 'no-authenticated';
+  })
 
   // Methods
   login(email: string, password: string): Observable<boolean> {
@@ -47,15 +44,31 @@ export class AuthService {
       )
   }
 
+  register(email: string, password: string, fullName: string): Observable<boolean> {
+    return this.http
+      .post<AuthResponse>(`${ BASE_URL }/auth/register`, { email, password, fullName })
+      .pipe(
+        map( resp => this.handlerRegisterSuccess(resp)),
+        catchError( err => this.handlerAuthError(err))
+      )
+  }
+
+  logOut() {
+    this._user.set(null)
+    this._token.set(null)
+    this._authStatus.set('no-authenticated')
+    localStorage.removeItem('token')
+  }
+
   checkStatus(): Observable<boolean> {
     const token = localStorage.getItem('token');
-    if (!token) return of(false);
+    if (!token) {
+      this._authStatus.set('no-authenticated');
+      return of(false);
+    }
 
-    return this.http.get<AuthResponse>(`${ BASE_URL }/auth/check-status`, {
-      // headers: {
-      //   'Authorization': `Bearer ${ token }`
-      // }
-    }).pipe(
+    return this.http.get<AuthResponse>(`${ BASE_URL }/auth/check-status`)
+    .pipe(
       map( resp => this.handlerAuthSuccess(resp)),
       catchError( err => this.handlerAuthError(err))
     )
@@ -74,10 +87,8 @@ export class AuthService {
     return of(false);
   }
 
-  logOut() {
-    this._user.set(null)
-    this._token.set(null)
+  private handlerRegisterSuccess({user, token}: AuthResponse) {
     this._authStatus.set('no-authenticated')
-    // localStorage.removeItem('token')
+    return true
   }
 }
