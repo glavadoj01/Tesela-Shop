@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, input, viewChild } from '@angular/core';
-
+import { ProductImagePipe } from '@/products/pipes/product-image.pipe';
 // import Swiper JS
 // core version + navigation, pagination modules:
 import Swiper from 'swiper';
@@ -8,8 +8,6 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { ProductImagePipe } from '@/products/pipes/product-image.pipe';
-
 
 @Component({
   selector: 'product-carousel',

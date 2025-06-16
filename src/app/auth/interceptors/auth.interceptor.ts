@@ -1,6 +1,6 @@
 import { HttpRequest, HttpHandlerFn } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { AuthService } from "../services/auth.service";
+import { AuthService } from "@auth/services/auth.service";
 
 export function authInterceptor(
   req: HttpRequest<unknown>,

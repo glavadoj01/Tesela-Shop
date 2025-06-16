@@ -7,8 +7,11 @@ export const routes: Routes = [
     loadChildren: () => import('./auth/auth.routes'),
     canMatch: [
       NotAuthenticatedGuard,
-      () => console.log('Información desde el gestor de rutas 😀')
     ]
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin-dashboard/admin-dashboard.routes'),
   },
   {
     path: '',
