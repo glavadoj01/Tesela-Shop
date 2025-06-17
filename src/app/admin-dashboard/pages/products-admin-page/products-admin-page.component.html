@@ -1,1 +1,28 @@
-<p>products-admin-page works!</p>,
+<h1 class="text-2xl font-bold">Listado de productos</h1>
+<h3 class="text-lg">Total de productos
+  <span class="text-secondary">{{ productsResource.value()?.count }}</span>
+</h3>
+
+<div class="flex flex-row gap-2 items-center h-20 mt-5">
+  <app-pagination
+    [pages]="productsResource.value()?.pages ?? 1"
+    [currentPage]="paginationService.currentPage()"
+  />
+
+  <select class="select select-bordered w-32"
+    #selectPerPage
+    (change)="productPerPage.set(+selectPerPage.value)"
+  >
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+</div>
+
+
+<div class="divider"></div>
+
+<product-table
+  [products]="productsResource.value()?.products || []"
+/>

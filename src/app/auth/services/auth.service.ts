@@ -27,12 +27,14 @@ export class AuthService {
 
   // Getters
   user = computed<User | null>( () => this._user());
-  token = computed<string | null>( () => this._token());
+  token = computed<string | null>(() => this._token());
   authStatus = computed<AuthStatus>( () => {
     if (this._authStatus() === 'checking') return 'checking';
     if( this._user()) return 'authenticated';
     return 'no-authenticated';
   })
+
+  isAdmin = computed(() => this._user()?.roles.includes('admin') ?? false);
 
   // Methods
   login(email: string, password: string): Observable<boolean> {
@@ -63,7 +65,7 @@ export class AuthService {
   checkStatus(): Observable<boolean> {
     const token = localStorage.getItem('token');
     if (!token) {
-      this._authStatus.set('no-authenticated');
+      this.logOut();
       return of(false);
     }
 

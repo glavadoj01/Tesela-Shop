@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { delay, Observable, of, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from '@environments/environment';
 import { Product, ProductsResponse } from '@products/interfaces/product-response';
 
@@ -52,8 +52,42 @@ export class ProductsService {
     return this.http
     .get<Product>(`${BASE_URL}/products/${idSlug}`)
     .pipe(
-      delay(2000), // Simulate a delay of 2 seconds
       tap( resp => this.productCache.set(idSlug, resp) ),
     )
   }
+
+  getProductById(id: string): Observable<Product> {
+
+    if (this.productCache.has(id)) {
+      return of(this.productCache.get(id)!)
+    }
+
+    return this.http
+    .get<Product>(`${BASE_URL}/products/${id}`)
+    .pipe(
+      tap( resp => this.productCache.set(id, resp) ),
+    )
+  }
+
+  updateProduct(
+    id: string,
+    productLike: Partial<Product>
+  ): Observable<Product> {
+    return this.http.patch<Product>(`${BASE_URL}/products/${id}`, productLike).pipe(
+      tap( product => this.updateProductCache(product) )
+    )
+  }
+
+  updateProductCache(product: Product) {
+    const id = product.id;
+
+    this.productCache.set(id, product);
+
+    this.productsCache.forEach( productsResponse => {
+      productsResponse.products = productsResponse.products.map(
+        currentProduct => currentProduct.id === id ? product : currentProduct
+      )
+    })
+  }
+
 }

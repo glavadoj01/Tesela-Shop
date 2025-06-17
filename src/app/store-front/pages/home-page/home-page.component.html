@@ -22,7 +22,9 @@ class="grid grid-cols1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-5 gap-3"
 -->
 </div>
 
-<app-pagination
-  [pages]="productsResource.value()?.pages ?? 1"
-  [currentPage]="paginationService.currentPage()"
-/>
+<div class="my-10">
+  <app-pagination
+    [pages]="productsResource.value()?.pages ?? 1"
+    [currentPage]="paginationService.currentPage()"
+  />
+</div>
