@@ -10,8 +10,8 @@ const BASE_URL = environment.baseUrl;
 })
 export class ProductImagePipe implements PipeTransform {
 
-  transform(value: string | string[]): string {
-    if (!value || value.length === 0) {
+  transform(value: null | string | string[]): string {
+    if (!value || value.length === 0 || value === null) {
       return IMG_DEFAULT;
     }
 

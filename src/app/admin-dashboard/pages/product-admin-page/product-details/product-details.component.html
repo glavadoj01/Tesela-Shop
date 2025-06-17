@@ -124,3 +124,12 @@
     <input type="file" class="file-input file-input-bordered w-full mt-4" />
   </div>
 </form>
+
+@if (wasSaved()) {
+  <div
+    class="alert alert-success w-80 animate-fadeIn flex justify-center mx-auto"
+    style="margin-top: 30px;"
+  >
+    <span>Datos actualizados correctamente</span>
+  </div>
+}

@@ -3,8 +3,10 @@ import { Product, Size } from '@/products/interfaces/product-response';
 import { ProductsService } from '@/products/services/products.service';
 import { FormErrorLabelComponent } from '@/shared/components/form-error-label/form-error-label.component';
 import { FormUtils } from '@/utils/form-utils';
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'product-details',
@@ -16,7 +18,9 @@ export class ProductDetailsComponent implements OnInit {
 
   productsService = inject(ProductsService)
   fb = inject(FormBuilder)
+  router = inject(Router)
   sizes: Size[] = Object.values(Size)
+  wasSaved = signal(false)
 
   productForm = this.fb.group({
     title: ['', Validators.required],
@@ -60,7 +64,7 @@ export class ProductDetailsComponent implements OnInit {
     this.productForm.patchValue({ sizes: currentSizes });
   }
 
-  onSubmit() {
+  async onSubmit() {
     const isValid = this.productForm.valid;
     this.productForm.markAllAsTouched();
 
@@ -75,6 +79,20 @@ export class ProductDetailsComponent implements OnInit {
         ?? [],
     }
 
-    this.productsService.updateProduct(this.product().id, productLike).subscribe();
+    if (this.product().id === 'new') {
+      const product = await firstValueFrom(
+        this.productsService.createProduct(productLike)
+      )
+      this.router.navigate(['/admin/products', product.id])
+    }
+    else {
+      await firstValueFrom(
+        this.productsService.updateProduct(this.product().id, productLike)
+      )
+    }
+
+
+    this.wasSaved.set(true);
+    setTimeout(() => this.wasSaved.set(false), 5000);
   }
 }
