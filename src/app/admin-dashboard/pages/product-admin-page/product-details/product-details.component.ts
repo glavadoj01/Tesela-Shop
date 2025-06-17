@@ -88,13 +88,13 @@ export class ProductDetailsComponent implements OnInit {
 
     if (this.product().id === 'new') {
       const product = await firstValueFrom(
-        this.productsService.createProduct(productLike)
+        this.productsService.createProduct(productLike, this.imageFileList)
       )
       this.router.navigate(['/admin/products', product.id])
     }
     else {
       await firstValueFrom(
-        this.productsService.updateProduct(this.product().id, productLike)
+        this.productsService.updateProduct(this.product().id, productLike, this.imageFileList)
       )
     }
 
