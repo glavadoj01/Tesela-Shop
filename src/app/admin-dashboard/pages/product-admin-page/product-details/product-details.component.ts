@@ -3,7 +3,7 @@ import { Product, Size } from '@/products/interfaces/product-response';
 import { ProductsService } from '@/products/services/products.service';
 import { FormErrorLabelComponent } from '@/shared/components/form-error-label/form-error-label.component';
 import { FormUtils } from '@/utils/form-utils';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -19,8 +19,15 @@ export class ProductDetailsComponent implements OnInit {
   productsService = inject(ProductsService)
   fb = inject(FormBuilder)
   router = inject(Router)
+
   sizes: Size[] = Object.values(Size)
+  imageFileList: FileList | undefined = undefined;
+
   wasSaved = signal(false)
+  tempImgages = signal<string[]>([])
+  imagesToCarousel = computed(() => {
+    return [...this.product().images, ...this.tempImgages()]
+  })
 
   productForm = this.fb.group({
     title: ['', Validators.required],
@@ -91,8 +98,20 @@ export class ProductDetailsComponent implements OnInit {
       )
     }
 
-
     this.wasSaved.set(true);
     setTimeout(() => this.wasSaved.set(false), 5000);
+  }
+
+  onFilesChanged(event: Event) {
+    const fileList = (event.target as HTMLInputElement).files;
+    if (!fileList || fileList.length === 0) return;
+
+    const imagesUrls = Array.from(fileList).map(file => {
+      return URL.createObjectURL(file);
+    })
+
+    this.tempImgages.set(imagesUrls);
+
+    this.imageFileList = fileList;
   }
 }
