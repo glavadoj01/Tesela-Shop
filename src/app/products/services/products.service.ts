@@ -90,7 +90,9 @@ export class ProductsService {
     imageFileList?: FileList
   ): Observable<Product> {
 
-    const currentImages = productLike.images ?? [];
+    const currentImages = (productLike.images ?? []).filter(
+      img => typeof img === 'string' && img.trim() !== '' && !img.startsWith('blob:')
+    );
 
     return this.uploadImages(imageFileList).pipe(
       map(imagesName => ({
@@ -109,7 +111,9 @@ export class ProductsService {
     imageFileList?: FileList
   ): Observable<Product> {
 
-    const currentImages = newProduct.images ?? [];
+    const currentImages = (newProduct.images ?? []).filter(
+      img => typeof img === 'string' && img.trim() !== '' && !img.startsWith('blob:')
+    );
     return this.uploadImages(imageFileList).pipe(
       map(imagesName => ({
         ...newProduct,

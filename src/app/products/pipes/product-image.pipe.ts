@@ -20,10 +20,12 @@ export class ProductImagePipe implements PipeTransform {
     }
 
     if (typeof value === 'string') {
+      if (!value.trim()) return IMG_DEFAULT
       return `${BASE_URL}/files/product/${value}`;
     }
 
-    const imagen = value[0]
+    const imagen = value.find(v => !!v && v.trim());
+    if (!imagen) return IMG_DEFAULT;
 
     return `${BASE_URL}/files/product/${ imagen }`
   }
